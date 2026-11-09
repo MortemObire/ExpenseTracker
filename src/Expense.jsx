@@ -3,12 +3,12 @@ import { useState } from 'react'
 function Expense() {
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
+  const [OutcomeResult, setOutcomeResult] = useState(0);
 
   function Outcome(event) {
     event.preventDefault();
 
-    const [OutcomeResult] = useState(0);
-    OutcomeResult = income - expense;
+    setOutcomeResult(income - expense);
   }
 
   return (
@@ -25,7 +25,7 @@ function Expense() {
           type="text"
           id='income'
           value={income}
-          onSubmit={event => setIncome(event.target.value)}
+          onChange={event => setIncome(event.target.value)}
         />
         <button type='submit'>Add</button>
 
@@ -34,10 +34,10 @@ function Expense() {
           type="text"
           id='expenses'
           value={expense}
-          onSubmit={event => setExpense(event.target.value)}
+          onChange={event => setExpense(event.target.value)}
         />
         <button type='submit'>Add</button>
-        <button type='submit' onSubmit={Outcome}>Calculate</button>
+        <button type='submit' onClick={Outcome}>Calculate</button>
       </form>
       <h4>{income} - {expense}</h4>
     </section>
