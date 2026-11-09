@@ -27,7 +27,7 @@ function Expense() {
           value={income}
           onChange={event => setIncome(event.target.value)}
         />
-        <button type='submit'>Add</button>
+        <button>Add</button>
 
         <label htmlFor="">Add monthly expenses</label>
         <input
@@ -36,7 +36,7 @@ function Expense() {
           value={expense}
           onChange={event => setExpense(event.target.value)}
         />
-        <button type='submit'>Add</button>
+        <button>Add</button>
         <button type='submit' onClick={Outcome}>Calculate</button>
       </form>
       <h4>{income} - {expense}</h4>
