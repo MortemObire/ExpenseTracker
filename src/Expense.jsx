@@ -2,13 +2,26 @@ import { useState } from 'react'
 
 function Expense() {
   const [income, setIncome] = useState(0);
-  const [expense, setExpense] = useState(0);
+  const [expenses, setExpenses] = useState({
+    rent: 0,
+    groceries: 0,
+    utilities: 0,
+    subscriptions: 0,
+    restaurant: 0
+  });
   const [OutcomeResult, setOutcomeResult] = useState(0);
 
   function Outcome(event) {
     event.preventDefault();
 
-    setOutcomeResult(income - expense);
+    const totalExpenses = 
+    expenses.rent +
+    expenses.groceries + 
+    expenses.utilities +
+    expenses.subscriptions +
+    expenses.restaurant;
+
+    setOutcomeResult(income - totalExpenses);
   }
 
   return (
@@ -19,27 +32,60 @@ function Expense() {
     </header>
     
     <section className='Values'>
-      <form onSubmit="">
+      <form onSubmit={Outcome}>
         <label htmlFor="">Add monthly income</label>
         <input
-          type="text"
+          type="number"
           id='income'
           value={income}
-          onChange={event => setIncome(event.target.value)}
+          onChange={event => setIncome(Number(event.target.value))}
         />
-        <button>Add</button>
-
-        <label htmlFor="">Add monthly expenses</label>
-        <input
-          type="text"
-          id='expenses'
-          value={expense}
-          onChange={event => setExpense(event.target.value)}
-        />
-        <button>Add</button>
-        <button type='submit' onClick={Outcome}>Calculate</button>
+        <br />
+          <label>Rent</label>
+          <input
+          type="number"
+          value={expenses.rent}
+          onChange={event => setExpenses({...expenses,rent: Number(event.target.value)})}
+          />
+        <br />
+          <label>Groceries</label>
+          <input
+          type="number"
+          value={expenses.groceries}
+          onChange={event => setExpenses({...expenses,groceries: Number(event.target.value)})}
+          />
+        <br />
+          <label>Utilities</label>
+          <input
+          type="number"
+          value={expenses.utilities}
+          onChange={event => setExpenses({...expenses,utilities: Number(event.target.value)})}
+          />
+        <br />
+          <label>Subscriptions</label>
+          <input
+          type="number"
+          value={expenses.subscriptions}
+          onChange={event => setExpenses({...expenses,subscriptions: Number(event.target.value)})}
+          />
+        <br />
+          <label>Restaurant</label>
+          <input
+          type="number"
+          value={expenses.restaurant}
+          onChange={event => setExpenses({...expenses,restaurant: Number(event.target.value)})}
+          />
+        <br />
+        <button type='submit'>Calculate</button>
       </form>
-      <h4>{income} - {expense}</h4>
+      <h4>  
+        {income} - {expenses.rent} - {expenses.groceries} -
+        {expenses.utilities} - {expenses.subscriptions} -
+        {expenses.restaurant}
+      </h4>
+      <h4>
+        
+      </h4>
     </section>
     <section className=''>
       <h3>Your final outcome is:</h3>
