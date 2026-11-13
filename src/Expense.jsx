@@ -1,28 +1,42 @@
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
 
 function Expense() {
-  const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState({
-    rent: 0,
-    groceries: 0,
-    utilities: 0,
-    subscriptions: 0,
-    restaurant: 0
+
+  const [income, setIncome] = useState(() => {
+    return Number(localStorage.getItem('income')) || 0;
   });
-  const [OutcomeResult, setOutcomeResult] = useState(0);
 
-  function Outcome(event) {
-    event.preventDefault();
+  const [expenses, setExpenses] = useState(() => {
+    const savedExpenses = localStorage.getItem('expenses');
 
-    const totalExpenses = 
-    expenses.rent +
-    expenses.groceries + 
-    expenses.utilities +
-    expenses.subscriptions +
-    expenses.restaurant;
+    return savedExpenses ? JSON.parse(savedExpenses) : {
+      rent: 0,
+      groceries: 0,
+      utilities: 0,
+      subscriptions: 0,
+      restaurant: 0
+    };
+  });
+  
+  useEffect(() => {
+    localStorage.setItem('income', income);
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+  }, [income, expenses]);
 
-    setOutcomeResult(income - totalExpenses);
-  }
+    const totalExpenses = Object.values(expenses).reduce(
+    (total, amount) => total + amount,
+    0
+  );
+
+  const OutcomeResult = income - totalExpenses;
+
+  const expenseNames = [
+    { key: 'rent', label: 'Rent' },
+    { key: 'groceries', label: 'Groceries' },
+    { key: 'utilities', label: 'Utilities' },
+    { key: 'subscriptions', label: 'Subscriptions' },
+    { key: 'restaurant', label: 'Restaurant' }
+  ];
 
   return (
   <main>
@@ -32,64 +46,44 @@ function Expense() {
     </header>
     
     <section className='Values'>
-      <form onSubmit={Outcome}>
-        <label htmlFor="">Add monthly income</label>
+
+        <label htmlFor="income">Add monthly income</label>
+
         <input
           type="number"
-          id='income'
+          id="income"
           value={income}
           onChange={event => setIncome(Number(event.target.value))}
         />
-        <br />
-          <label>Rent</label>
-          <input
-          type="number"
-          value={expenses.rent}
-          onChange={event => setExpenses({...expenses,rent: Number(event.target.value)})}
-          />
-        <br />
-          <label>Groceries</label>
-          <input
-          type="number"
-          value={expenses.groceries}
-          onChange={event => setExpenses({...expenses,groceries: Number(event.target.value)})}
-          />
-        <br />
-          <label>Utilities</label>
-          <input
-          type="number"
-          value={expenses.utilities}
-          onChange={event => setExpenses({...expenses,utilities: Number(event.target.value)})}
-          />
-        <br />
-          <label>Subscriptions</label>
-          <input
-          type="number"
-          value={expenses.subscriptions}
-          onChange={event => setExpenses({...expenses,subscriptions: Number(event.target.value)})}
-          />
-        <br />
-          <label>Restaurant</label>
-          <input
-          type="number"
-          value={expenses.restaurant}
-          onChange={event => setExpenses({...expenses,restaurant: Number(event.target.value)})}
-          />
-        <br />
-        <button type='submit'>Calculate</button>
-      </form>
-      <h4>  
-        {income} - {expenses.rent} - {expenses.groceries} -
-        {expenses.utilities} - {expenses.subscriptions} -
-        {expenses.restaurant}
-      </h4>
-      <h4>
-        
-      </h4>
+
+        {expenseNames.map((expense) => (
+          <div key={expense.key}>
+            <label htmlFor={expense.key}>
+              {expense.label}
+            </label>
+
+            <input
+              type="number"
+              id={expense.key}
+              value={expenses[expense.key]}
+              onChange={event =>
+                setExpenses({
+                  ...expenses,
+                  [expense.key]: Number(event.target.value)
+                })
+              }
+            />
+          </div>
+        ))}
+
     </section>
-    <section className=''>
-      <h3>Your final outcome is:</h3>
-      <h4>{OutcomeResult}</h4>
+    
+    <section>
+        <h3>Total expenses:</h3>
+        <h4>{totalExpenses}</h4>
+
+        <h3>Your final outcome is:</h3>
+        <h4>{OutcomeResult}</h4>
     </section>
   </main>  
   )
